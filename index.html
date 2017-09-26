@@ -201,6 +201,39 @@
         this.isOpen = false;
         this.isLocked = false;
         this.el.addEventListener("click", this, false);
+        this.setColor(color);
+      }
+
+      GameSquare.prototype.handleEvent = function(e) {
+        switch (e.type) {
+          case "click":
+            if (this.isOpen || this.isLocked) {
+              return;
+            }
+            this.isOpen = true;
+            this.el.classList.add('flip');
+        }
+      }
+      
+      // The rest method needs to set is open to false, is locked to false, and remove the flip class.
+
+      GameSquare.prototype.reset = function() {
+        this.isOpen = false;
+        this.isLocked = false;
+        this.el.classList.remove('flip');
+      }
+
+      //When two squares are matched we'll call lock() on each. To lock a square we need to set is open to true and is locked to true.
+
+      GameSquare.prototype.lock = function() {
+        this.isLocked = true;
+        this.isOpen = true;
+      }
+
+      GameSquare.prototype.setColor = function() {
+        this.el.children[0].children[1].classList.remove(this.color);
+        this.color = color;
+        this.el.children[0].children[1].classList.add(color);
       }
 
     </script>
