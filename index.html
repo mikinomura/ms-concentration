@@ -18,6 +18,7 @@
         height: 200%;
         position: absolute;
         top: 0;
+        transition: 400ms;
       }
 
       .game-square > div > div {
@@ -193,6 +194,7 @@
       //list of class names for the "color classes"
       var colors = [];
       var gameSquares = [];
+      var firstSquare = null;
 
       for (var i = 0; i < 10; i++) {
         colors.push('square-' + i);
@@ -214,6 +216,7 @@
             }
             this.isOpen = true;
             this.el.classList.add('flip');
+            checkGame(this);
         }
       }
       
@@ -240,9 +243,48 @@
 
       function setupGame() {
         var array = document.getElementsByClassName("game-square");
-        for (var i = 0; i < array.length; i++) {
-          gameSquares.push(new GameSquare(array[i], colors[0]));
+        var randomColors = getSomeColors();             // Get an array of 8 random color pairs
+        for (var i = 0; i < array.length; i++) {  
+          var index = random(randomColors.length);      // Get a random index
+          var color = randomColors.splice(index, 1)[0]; // Get the color at that index
+          // Use that color to initialize the GameSquare
+          gameSquares.push(new GameSquare(array[i], color));
         }
+      }
+
+      function random(n) {
+        return Math.floor(Math.random() * n);
+      }
+
+      function getSomeColors() {
+        var colorscopy = colors.slice();
+        var randomColors = [];
+        for (var i = 0; i < 8; i++) {
+          var index = random(colorscopy.length);
+          randomColors.push(colorscopy.splice(index, 1)[0]);
+        }
+        return randomColors.concat(randomColors.slice());
+      }
+
+      function checkGame(gameSquare) {
+        if (firstSquare == null) {
+          firstSquare = gameSquare;
+          return
+        }
+
+        if (firstSquare.color == gameSquare.color) {
+          firstSquare.lock();
+          gameSquare.lock();
+        } else {
+          var a = firstSquare;
+          var b = gameSquare;
+          setTimeout(function() {
+            a.reset();
+            b.reset();
+            firstSquare = null;
+          }, 400);
+        }
+        firstSquare = null;
       }
 
       setupGame();
