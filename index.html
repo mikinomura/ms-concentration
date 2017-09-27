@@ -192,6 +192,8 @@
 
       //list of class names for the "color classes"
       var colors = [];
+      var gameSquares = [];
+
       for (var i = 0; i < 10; i++) {
         colors.push('square-' + i);
       }
@@ -230,11 +232,20 @@
         this.isOpen = true;
       }
 
-      GameSquare.prototype.setColor = function() {
+      GameSquare.prototype.setColor = function(color) {
         this.el.children[0].children[1].classList.remove(this.color);
         this.color = color;
         this.el.children[0].children[1].classList.add(color);
       }
+
+      function setupGame() {
+        var array = document.getElementsByClassName("game-square");
+        for (var i = 0; i < array.length; i++) {
+          gameSquares.push(new GameSquare(array[i], colors[0]));
+        }
+      }
+
+      setupGame();
 
     </script>
   </body>
